@@ -1,0 +1,23 @@
+name: eatpages
+version: 0.01.00
+summary: A tool to consume all available pages for low memory testing
+description: eatpages is a tool that runs as a back ground process that marks pages as poisoned and unusable. This force out of memory conditions and can catch processes that cannot handle low memory conditions.
+confinement: strict
+grade: stable
+
+parts:
+    eatpages:
+        plugin: make
+        source: https://github.com/ColinIanKing/eatpages.git
+
+        build-packages:
+            - gcc
+            - make
+
+        prime:
+            - usr/bin/
+
+apps:
+    eatpages:
+        plugs: [home]
+        command: usr/bin/eatpages
