@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Canonical, Ltd.
+ * Copyright (C) 2017-2018 Canonical, Ltd.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,6 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -56,11 +57,12 @@ static void sigbus_handler(int dummy)
 	siglongjmp(jmp_env, 1);
 }
 
-int main(int argc, char **argv)
+int main(void)
 {
 	static struct sigaction new_action;
 	size_t page_size = sysconf(_SC_PAGESIZE);
 	size_t sz = page_size * 4;
+
 	page_size = (page_size <= 0) ? 4096: page_size;
 
 	if (geteuid()) {
