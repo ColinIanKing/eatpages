@@ -1,5 +1,7 @@
 name: eatpages
-version: 0.01.00
+version: git
+version-script: |
+    echo $(git describe --tags)
 summary: A tool to consume all available pages for low memory testing
 description: eatpages is a tool that runs as a back ground process that marks pages as poisoned and unusable. This force out of memory conditions and can catch processes that cannot handle low memory conditions.
 confinement: strict
