@@ -1,16 +1,39 @@
 name: eatpages
-version: git
-version-script: |
-    echo $(git describe --tags)
 summary: A tool to consume all available pages for low memory testing
 description: eatpages is a tool that runs as a back ground process that marks pages as poisoned and unusable. This force out of memory conditions and can catch processes that cannot handle low memory conditions.
 confinement: strict
 grade: stable
+type: app
+base: core20
+assumes: [snapd2.37]
+adopt-info: eatpages
+
+architectures:
+    - build-on: s390x
+    - build-on: ppc64el
+    - build-on: arm64
+    - build-on: armhf
+    - build-on: amd64
+    - build-on: i386
 
 parts:
     eatpages:
         plugin: make
         source: https://github.com/ColinIanKing/eatpages.git
+        override-pull: |
+            snapcraftctl pull
+            description="$(git describe HEAD --tags)"
+            sha=$(echo $description | tr '-' ' ' | awk '{print $NF}')
+            version=${description%$sha}
+            commits=$(git log --oneline | wc -l)
+            date=$(date +'%Y%m%d')
+            if test "$description" = "$sha"
+            then
+                version="$description"
+            else
+                version=$(echo $version$date-$commits-$sha | cut -c1-32)
+            fi
+            snapcraftctl set-version "$version"
 
         build-packages:
             - gcc
